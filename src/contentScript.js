@@ -7,9 +7,16 @@ class Post {
     this.element.style.background = color;
   }
 
+  get expandButton() {
+    return this.element.children[1].children[0].children[1].children[3].children[0];
+  }
+
   get isExpanded() {
-    const expandButton = this.element.children[1].children[0].children[1].children[3].children[0];
-    return expandButton.getAttribute('aria-expanded') === 'true';
+    return this.expandButton.getAttribute('aria-expanded') === 'true';
+  }
+
+  expand() {
+    this.expandButton.click();
   }
 
   scrollIntoView() {
@@ -85,8 +92,8 @@ class Navigator {
 
     if (previousPost && previousPost.isExpanded) {
       previousPost.highlight("blue");
-      console.log('scroll intoView', activePost);
       activePost.scrollIntoView();
+      activePost.expand();
     }
     // if previousPost is expanded, scroll activePost into view, and expand.
   }
@@ -105,9 +112,7 @@ class Navigator {
           this.handleNavigation("UP", event);
         });
         break;
-      // Make X stateful
       case 88: // X
-        console.log("show preview");
         break;
     }
   };
