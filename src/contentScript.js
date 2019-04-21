@@ -3,10 +3,6 @@ class Post {
     this.element = element;
   }
 
-  highlight(color = "hotpink") {
-    this.element.style.background = color;
-  }
-
   get expandButton() {
     return this.element.children[1].children[0].children[1].children[3].children[0];
   }
@@ -81,10 +77,6 @@ class Navigator {
   handleNavigation(direction, event) {
     const activePost = DomManager.findActivePost(this.element);
 
-    if (activePost) {
-      activePost.highlight();
-    }
-
     const previousPost = DomManager.findSiblingPost(
       activePost.element,
       direction
@@ -95,13 +87,10 @@ class Navigator {
       activePost.scrollIntoView();
       activePost.expand();
     }
-    // if previousPost is expanded, scroll activePost into view, and expand.
   }
 
   handleKeydown = event => {
     switch (event.keyCode) {
-      // After J press, make it highlight next post and not the first one if already opened one
-      // When in X mode, also open next preview and scroll it into view
       case 74: // J
         setTimeout(() => {
           this.handleNavigation("DOWN", event);
