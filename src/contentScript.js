@@ -83,13 +83,12 @@ class Navigator {
     );
 
     if (previousPost && previousPost.isExpanded) {
-      previousPost.highlight("blue");
       activePost.scrollIntoView();
       activePost.expand();
     }
   }
 
-  handleKeydown = event => {
+  handleKeydown(event) {
     switch (event.keyCode) {
       case 74: // J
         setTimeout(() => {
