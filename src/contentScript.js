@@ -6,6 +6,15 @@ class Post {
   highlight(color = "hotpink") {
     this.element.style.background = color;
   }
+
+  get isExpanded() {
+    const expandButton = this.element.children[1].children[0].children[1].children[3].children[0];
+    return expandButton.getAttribute('aria-expanded') === 'true';
+  }
+
+  scrollIntoView() {
+    DomManager.scrollTo(this.element);
+  }
 }
 
 class DomManager {
@@ -24,7 +33,6 @@ class DomManager {
   }
 
   static findSiblingPost(element, direction) {
-    console.log("el", element.classList);
     if (!DomManager.isElementPost(element)) {
       throw new Error("Target element is not a Post", element);
     }
@@ -34,10 +42,21 @@ class DomManager {
       direction === "UP"
         ? parentWithSiblings.nextElementSibling
         : parentWithSiblings.previousElementSibling;
+
+    if (!uncle) {
+      return null;
+    }
     const target = uncle.firstElementChild.firstElementChild;
 
     // TODO check if target is visible (could be an ad that's hidden)
     return new Post(target);
+  }
+
+  static scrollTo(element) {
+    const html = document.querySelector('html');
+    const { top } = element.getBoundingClientRect();
+
+    document.querySelector('html').scrollTo({ top: html.scrollTop + top - 50 });
   }
 }
 
@@ -64,8 +83,10 @@ class Navigator {
       direction
     );
 
-    if (previousPost) {
+    if (previousPost && previousPost.isExpanded) {
       previousPost.highlight("blue");
+      console.log('scroll intoView', activePost);
+      activePost.scrollIntoView();
     }
     // if previousPost is expanded, scroll activePost into view, and expand.
   }
