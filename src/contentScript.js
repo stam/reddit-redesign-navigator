@@ -80,7 +80,9 @@ class Navigator {
 
     if (previousPost && previousPost.isExpanded) {
       DomManager.scrollTo(activePost.element);
-      activePost.expand();
+      if (!activePost.isExpanded) {
+        activePost.expand();
+      }
     }
   }
 
