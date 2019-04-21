@@ -4,7 +4,8 @@ class Post {
   }
 
   get expandButton() {
-    return this.element.children[1].children[0].children[1].children[3].children[0];
+    return this.element.children[1].children[0].children[1].children[3]
+      .children[0];
   }
 
   get isExpanded() {
@@ -14,14 +15,10 @@ class Post {
   expand() {
     this.expandButton.click();
   }
-
-  scrollIntoView() {
-    DomManager.scrollTo(this.element);
-  }
 }
 
 class DomManager {
-  static findActivePost(container) {
+  static findActivePost() {
     const element = document.activeElement;
 
     if (DomManager.isElementPost(element)) {
@@ -71,10 +68,9 @@ class Navigator {
         `Redesign navigator failed to construct, element with selector ${selector} not found.`
       );
     }
-    this.bind();
   }
 
-  handleNavigation(direction, event) {
+  handleNavigation(direction) {
     const activePost = DomManager.findActivePost(this.element);
 
     const previousPost = DomManager.findSiblingPost(
@@ -83,7 +79,7 @@ class Navigator {
     );
 
     if (previousPost && previousPost.isExpanded) {
-      activePost.scrollIntoView();
+      DomManager.scrollTo(activePost.element);
       activePost.expand();
     }
   }
@@ -92,27 +88,29 @@ class Navigator {
     switch (event.keyCode) {
       case 74: // J
         setTimeout(() => {
-          this.handleNavigation("DOWN", event);
+          this.handleNavigation('DOWN', event);
         });
         break;
       case 75: // K
         setTimeout(() => {
-          this.handleNavigation("UP", event);
+          this.handleNavigation('UP', event);
         });
         break;
       case 88: // X
+      default:
         break;
     }
-  };
+  }
 
   bind() {
-    this.element.addEventListener("keydown", this.handleKeydown.bind(this));
+    this.element.addEventListener('keydown', this.handleKeydown.bind(this));
   }
 
   unbind() {
-    this.element.removeEventListener("keydown", this.handleKeydown.bind(this));
+    this.element.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
 }
 
 // TODO add and destroy listeners when switching pages
-const redditRedesignNavigator = new Navigator("#SHORTCUT_FOCUSABLE_DIV");
+const redditRedesignNavigator = new Navigator('#SHORTCUT_FOCUSABLE_DIV');
+redditRedesignNavigator.bind();
