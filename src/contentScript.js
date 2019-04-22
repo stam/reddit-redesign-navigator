@@ -113,6 +113,30 @@ class Navigator {
   }
 }
 
-// TODO add and destroy listeners when switching pages
-const redditRedesignNavigator = new Navigator('#SHORTCUT_FOCUSABLE_DIV');
-redditRedesignNavigator.bind();
+function pageHasRedditPosts() {
+  if (window.location.host !== 'www.reddit.com') {
+    return false;
+  }
+
+  const postCount = document.querySelectorAll('.Post').length > 0;
+  return postCount;
+}
+
+let navigator;
+
+function init() {
+  if (navigator) {
+    navigator.unbind();
+  }
+
+  if (!pageHasRedditPosts()) {
+    return;
+  }
+
+  navigator = new Navigator('#SHORTCUT_FOCUSABLE_DIV');
+  navigator.bind();
+}
+
+window.addEventListener('popstate', init);
+window.addEventListener('pushstate-changed', init);
+init();
