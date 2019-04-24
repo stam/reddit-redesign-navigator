@@ -73,6 +73,10 @@ class Navigator {
   handleNavigation(direction) {
     const activePost = DomManager.findActivePost(this.element);
 
+    if (!activePost) {
+      return;
+    }
+
     const previousPost = DomManager.findSiblingPost(
       activePost.element,
       direction
@@ -118,8 +122,21 @@ function pageHasRedditPosts() {
     return false;
   }
 
-  const postCount = document.querySelectorAll('.Post').length > 0;
-  return postCount;
+  const hasPosts = document.querySelectorAll('.Post').length > 0;
+
+  if (!hasPosts) {
+    return false;
+  }
+
+  const path = window.location.pathname.split('/');
+
+  if (path.length > 3) {
+    if (path[3] === 'comments') {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 let navigator;
