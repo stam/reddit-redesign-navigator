@@ -73,6 +73,10 @@ class Navigator {
   handleNavigation(direction) {
     const activePost = DomManager.findActivePost(this.element);
 
+    if (!activePost) {
+      return;
+    }
+
     const previousPost = DomManager.findSiblingPost(
       activePost.element,
       direction
@@ -113,6 +117,43 @@ class Navigator {
   }
 }
 
-// TODO add and destroy listeners when switching pages
-const redditRedesignNavigator = new Navigator('#SHORTCUT_FOCUSABLE_DIV');
-redditRedesignNavigator.bind();
+function pageHasRedditPosts() {
+  if (window.location.host !== 'www.reddit.com') {
+    return false;
+  }
+
+  const hasPosts = document.querySelectorAll('.Post').length > 0;
+
+  if (!hasPosts) {
+    return false;
+  }
+
+  const path = window.location.pathname.split('/');
+
+  if (path.length > 3) {
+    if (path[3] === 'comments') {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+let navigator;
+
+function init() {
+  if (navigator) {
+    navigator.unbind();
+  }
+
+  if (!pageHasRedditPosts()) {
+    return;
+  }
+
+  navigator = new Navigator('#SHORTCUT_FOCUSABLE_DIV');
+  navigator.bind();
+}
+
+window.addEventListener('popstate', init);
+window.addEventListener('pushstate-changed', init);
+init();

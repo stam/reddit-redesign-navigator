@@ -7,7 +7,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.reddit.com/*"],
-      "js": ["contentScript.js"]
+      "js": ["historyHack.js", "contentScript.js"]
     }
   ]
 }
