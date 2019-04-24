@@ -13,7 +13,10 @@ class Post {
   }
 
   expand() {
-    this.expandButton.click();
+    // The expandbutton can also be an "A", which opens a new link which we don't want
+    if (this.expandButton.tagName === 'BUTTON') {
+      this.expandButton.click();
+    }
   }
 }
 
